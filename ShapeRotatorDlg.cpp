@@ -1,6 +1,7 @@
 
 #include "ShapeRotatorDlg.h"
 #include "vecmat.h"
+#include "GenerateRotation.h"
 #include <vector>
 #include <iostream>
 #include <fstream>
