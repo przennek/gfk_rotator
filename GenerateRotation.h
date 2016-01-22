@@ -71,7 +71,7 @@ public:
                 }
             }
         }
-        printTable(vecs, point_no, number_of_fields);
+        printTable(vecs, point_no * 3 * (360/angle), number_of_fields);
         free_3d_arr(out);
         return vecs;
     }
