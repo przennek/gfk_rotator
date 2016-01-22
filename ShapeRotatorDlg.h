@@ -17,6 +17,7 @@
 #ifndef WX_PRECOMP
 	#include <wx/wx.h>
 	#include <wx/dialog.h>
+        #include<vector>
 #else
 	#include <wx/wxprec.h>
 #endif
@@ -44,6 +45,10 @@ class Matrix4;
 class ShapeRotatorDlg : public wxDialog
 {
 	private:
+            bool cleared;
+            bool drawOn;
+            int drawX, drawY;
+            std::vector <double> daneY, daneX;
 		DECLARE_EVENT_TABLE();
 		
 	public:
@@ -72,6 +77,8 @@ class ShapeRotatorDlg : public wxDialog
 		void WxPanel1UpdateUI(wxUpdateUIEvent& event);
 		void WxPanel1UpdateUI0(wxUpdateUIEvent& event);
 		void WxButton3Click(wxCommandEvent& event);
+                void mouseClick(wxMouseEvent& event);
+                void drawRoteted(wxCommandEvent& event);
 	
 	private:
 		//Do not add custom control declarations between 
