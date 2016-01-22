@@ -76,6 +76,9 @@ class ShapeRotatorDlg : public wxDialog
 		void WxSB_ScaleZScroll(wxScrollEvent& event);
 		void WxPanel1UpdateUI(wxUpdateUIEvent& event);
 		void WxPanel1UpdateUI0(wxUpdateUIEvent& event);
+                //void Resize(wxUpdateUIEvent& event);
+                void clear3DData();
+                void clear2DData();
 		void WxButton3Click(wxCommandEvent& event);
                 void mouseClick(wxMouseEvent& event);
                 void drawRoteted(wxCommandEvent& event);

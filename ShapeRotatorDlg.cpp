@@ -46,7 +46,7 @@ EVT_COMMAND_SCROLL(ID_WXSB_ROTATEX, ShapeRotatorDlg::WxSB_RotateXScroll)
 
 EVT_COMMAND_SCROLL(ID_WXSB_ROTATEX, ShapeRotatorDlg::WxSB_RotateXScroll)
 
-
+//EVT_SIZE(ShapeRotatorDlg::Resize)
 
 
 EVT_UPDATE_UI(ID_WXPANEL1, ShapeRotatorDlg::WxPanel1UpdateUI)
@@ -90,7 +90,7 @@ void ShapeRotatorDlg::CreateGUIControls() {
     WxBoxSizer3 = new wxBoxSizer(wxHORIZONTAL);
     WxBoxSizer2->Add(WxBoxSizer3, 0, wxALIGN_CENTER | wxALL, 5);
 
-    WxStaticText1 = new wxStaticText(this, ID_WXSTATICTEXT1, _("Obr�t X:"), wxPoint(5, 5), wxDefaultSize, 0, _("WxStaticText1"));
+    WxStaticText1 = new wxStaticText(this, ID_WXSTATICTEXT1, _("Rotate X:"), wxPoint(5, 5), wxDefaultSize, 0, _("WxStaticText1"));
     WxBoxSizer3->Add(WxStaticText1, 0, wxALIGN_CENTER | wxALL, 5);
 
     WxSB_RotateX = new wxScrollBar(this, ID_WXSB_ROTATEX, wxPoint(63, 5), wxSize(140, 18), wxSB_HORIZONTAL, wxDefaultValidator, _("WxSB_RotateX"));
@@ -103,7 +103,7 @@ void ShapeRotatorDlg::CreateGUIControls() {
     WxBoxSizer4 = new wxBoxSizer(wxHORIZONTAL);
     WxBoxSizer2->Add(WxBoxSizer4, 0, wxALIGN_CENTER | wxALL, 5);
 
-    WxStaticText2 = new wxStaticText(this, ID_WXSTATICTEXT2, _("Obr�t Y:"), wxPoint(5, 5), wxDefaultSize, 0, _("WxStaticText2"));
+    WxStaticText2 = new wxStaticText(this, ID_WXSTATICTEXT2, _("Rotate Y:"), wxPoint(5, 5), wxDefaultSize, 0, _("WxStaticText2"));
     WxBoxSizer4->Add(WxStaticText2, 0, wxALIGN_CENTER | wxALL, 5);
 
     WxSB_RotateY = new wxScrollBar(this, ID_WXSB_ROTATEY, wxPoint(63, 5), wxSize(140, 18), wxSB_HORIZONTAL, wxDefaultValidator, _("WxSB_RotateY"));
@@ -116,7 +116,7 @@ void ShapeRotatorDlg::CreateGUIControls() {
     WxBoxSizer5 = new wxBoxSizer(wxHORIZONTAL);
     WxBoxSizer2->Add(WxBoxSizer5, 0, wxALIGN_CENTER | wxALL, 5);
 
-    WxStaticText3 = new wxStaticText(this, ID_WXSTATICTEXT3, _("Obr�t Z:"), wxPoint(5, 5), wxDefaultSize, 0, _("WxStaticText3"));
+    WxStaticText3 = new wxStaticText(this, ID_WXSTATICTEXT3, _("Rotate Z:"), wxPoint(5, 5), wxDefaultSize, 0, _("WxStaticText3"));
     WxBoxSizer5->Add(WxStaticText3, 0, wxALIGN_CENTER | wxALL, 5);
 
     WxSB_RotateZ = new wxScrollBar(this, ID_WXSB_ROTATEZ, wxPoint(63, 5), wxSize(140, 18), wxSB_HORIZONTAL, wxDefaultValidator, _("WxSB_RotateZ"));
@@ -176,6 +176,7 @@ void ShapeRotatorDlg::OnClose(wxCloseEvent& /*event*/) {
     deleteVectors();
     Destroy();
 }
+
 
 /*
  * WxButtonLoadClick
@@ -302,7 +303,7 @@ void ShapeRotatorDlg::Repaint() {
     //dc2.SetDeviceOrigin(w2/2, h2/2);
 
     //dc.SetBackground(wxBrush(RGB(255,255,255)));
-    // dc.Clear();
+    dc.Clear();
     dc.SetDeviceOrigin(w / 2, h / 2);
 
 
@@ -311,7 +312,7 @@ void ShapeRotatorDlg::Repaint() {
     //translationV->Set((WxSB_TranslationX->GetThumbPosition() -50 )/25.0, (WxSB_TranslationY->GetThumbPosition() -50 )/25.0, (WxSB_TranslationZ->GetThumbPosition() -50 )/25.0);
     //    scaleV->Set(((WxSB_ScaleX->GetThumbPosition() +1) )/120.0, ((WxSB_ScaleY->GetThumbPosition() +1) )/120.0, ((WxSB_ScaleZ->GetThumbPosition() +1) )/120.0);
 
-    finalTransformationMatrix = getTranslateMatrix(translationV) * getRotationMatrix(rotAngleV) * getScaleMatrix(scaleV);
+    finalTransformationMatrix =  getRotationMatrix(rotAngleV);
 
     int x_start_size = x_start.size();
 
@@ -381,21 +382,21 @@ void ShapeRotatorDlg::WxSB_RotateXScroll(wxScrollEvent& event) {
     wxString str;
     str << (WxSB_RotateX->GetThumbPosition());
     WxST_RotateX->SetLabel(str);
-    // Repaint();
+    Repaint();
 }
 
 void ShapeRotatorDlg::WxSB_RotateYScroll(wxScrollEvent& event) {
     wxString str;
     str << (WxSB_RotateY->GetThumbPosition());
     WxST_RotateY->SetLabel(str);
-    //// Repaint();
+    Repaint();
 }
 
 void ShapeRotatorDlg::WxSB_RotateZScroll(wxScrollEvent& event) {
     wxString str;
     str << (WxSB_RotateZ->GetThumbPosition());
     WxST_RotateZ->SetLabel(str);
-    // Repaint();
+    Repaint();
 }
 
 /*
@@ -425,10 +426,30 @@ void ShapeRotatorDlg::WxSB_ScaleZScroll(wxScrollEvent& event)
  Repaint();
 }
  */
+
+
+void ShapeRotatorDlg::clear3DData() {
+    x_start.clear();
+    y_start.clear();
+    z_start.clear();
+    x_end.clear();
+    y_end.clear();
+    z_end.clear();
+}
+void ShapeRotatorDlg::clear2DData() {
+    wxClientDC dcx(WxPanel1);
+    wxBufferedDC dca(&dcx);
+    dca.Clear();
+    daneX.clear();
+    daneY.clear();
+}
+
 void ShapeRotatorDlg::mouseClick(wxMouseEvent& event) {
     wxClientDC dcx(WxPanel1);
     wxBufferedDC dca(&dcx);
 
+    clear3DData();
+    
     if (!cleared) {
         dca.Clear();
         cleared = true;
@@ -464,6 +485,7 @@ void ShapeRotatorDlg::mouseClick(wxMouseEvent& event) {
 }
 
 void ShapeRotatorDlg::WxPanel1UpdateUI(wxUpdateUIEvent& event) {
+    
     //Repaint();
 }
 
@@ -473,7 +495,9 @@ void ShapeRotatorDlg::WxPanel1UpdateUI(wxUpdateUIEvent& event) {
 void ShapeRotatorDlg::WxPanel1UpdateUI0(wxUpdateUIEvent& event) {
     // insert your code here
 }
-
+//void ShapeRotatorDlg::Resize(wxSizeEvent& event) {
+//    Repaint();
+//}
 /*
  * WxButton3Click
  */
@@ -504,12 +528,7 @@ void ShapeRotatorDlg::drawRoteted(wxCommandEvent& event) {
     GenerateRotation gr(result, max);
     double** rotations = gr.generate();
 
-    x_start.clear();
-    y_start.clear();
-    z_start.clear();
-    x_end.clear();
-    y_end.clear();
-    z_end.clear();
+    clear3DData();
     R.clear();
     G.clear();
     B.clear();
