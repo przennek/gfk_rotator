@@ -514,24 +514,22 @@ void ShapeRotatorDlg::drawRoteted(wxCommandEvent& event) {
     }
 
     for (int i = 0; i < max; i++) {
-        // cout << daneX[i] <<" "<< daneY[i] << endl;
-    }
-
-    for (int i = 0; i < max; i++) {
         result[i][0] = daneX[i];
         result[i][1] = daneY[i];
         result[i][2] = daneX[i + 1];
         result[i][3] = daneY[i + 1];
-        // cout << daneX[i] <<" " << daneY[i]<< " "
-        // << daneX[i +1] <<" " << daneY[i+ 1]<< endl;
     }
+    
     GenerateRotation gr(result, max);
     double** rotations = gr.generate();
-
-    clear3DData();
-    R.clear();
-    G.clear();
-    B.clear();
+    clear3DData();R.clear();G.clear();B.clear();
+    
+    for(int i = 0; i < max; i++) {
+        delete [] result[i];
+    }
+    
+    delete [] result;
+    
     for (int i = 0; i < gr.get_vec_num() * 3 * (360/gr.get_angle()); i++) {
         x_start.push_back(rotations[i][0]);
         y_start.push_back(rotations[i][1]);
@@ -545,5 +543,7 @@ void ShapeRotatorDlg::drawRoteted(wxCommandEvent& event) {
         G.push_back(rotations[i][7]);
         B.push_back(rotations[i][8]);
     }
+    
+    gr.free_2d_arr(rotations);
     Repaint();
 }

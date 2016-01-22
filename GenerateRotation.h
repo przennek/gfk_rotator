@@ -71,7 +71,7 @@ public:
                 }
             }
         }
-        printTable(vecs, point_no * 3 * (360/angle), number_of_fields);
+//        printTable(vecs, point_no * 3 * (360/angle), number_of_fields);
         free_3d_arr(out);
         return vecs;
     }
@@ -87,6 +87,24 @@ public:
     int get_vec_num() {
         return point_no;
     }
+    
+    void free_3d_arr(double ***out) {
+        for (int k = 0; k < point_no; k++) {
+            for (int j = 0; j < 360 / angle; j++) {
+                delete [] out[k][j];
+            }
+            delete [] out[k];
+        }
+        delete [] out;
+    }
+    
+    void free_2d_arr(double **out) {
+        for (int k = 0; k < 3 * point_no * (360 / angle); k++) {
+            delete [] out[k];
+        }
+        delete [] out;
+    }
+    
 private:
     // tablica [ilosc_puntkow][4] - xpocz, zpocz, xkon, zkon
     double** inputVectors;
@@ -214,16 +232,6 @@ private:
 
         }
         return generated_points;
-    }
-
-    void free_3d_arr(double ***out) {
-        for (int k = 0; k < point_no; k++) {
-            for (int j = 0; j < 360 / angle; j++) {
-                delete [] out[k][j];
-            }
-            delete [] out[k];
-        }
-        delete [] out;
     }
 };
 
