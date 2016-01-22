@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux
-CND_ARTIFACT_NAME_Debug=grafikaprojekt
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux/grafikaprojekt
+CND_ARTIFACT_NAME_Debug=grafika
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux/grafika
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux/package
-CND_PACKAGE_NAME_Debug=grafikaprojekt.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/grafikaprojekt.tar
+CND_PACKAGE_NAME_Debug=grafika.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/grafika.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux
-CND_ARTIFACT_NAME_Release=grafikaprojekt
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/grafikaprojekt
+CND_ARTIFACT_NAME_Release=grafika
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/grafika
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux/package
-CND_PACKAGE_NAME_Release=grafikaprojekt.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/grafikaprojekt.tar
+CND_PACKAGE_NAME_Release=grafika.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/grafika.tar
 #
 # include compiler specific variables
 #

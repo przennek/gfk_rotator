@@ -12,7 +12,12 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>main.cpp</itemPath>
+      <itemPath>ShapeRotator.wxform</itemPath>
+      <itemPath>ShapeRotatorApp.cpp</itemPath>
+      <itemPath>ShapeRotatorApp.h</itemPath>
+      <itemPath>ShapeRotatorDlg.cpp</itemPath>
+      <itemPath>ShapeRotatorDlg.h</itemPath>
+      <itemPath>vecmat.h</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -51,7 +56,17 @@
           <commandLine>`wx-config --libs`</commandLine>
         </linkerTool>
       </compileType>
-      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      <item path="ShapeRotator.wxform" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ShapeRotatorApp.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ShapeRotatorApp.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ShapeRotatorDlg.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ShapeRotatorDlg.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="vecmat.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -74,7 +89,17 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      <item path="ShapeRotator.wxform" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ShapeRotatorApp.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ShapeRotatorApp.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ShapeRotatorDlg.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ShapeRotatorDlg.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="vecmat.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

@@ -35,7 +35,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/ShapeRotatorApp.o \
+	${OBJECTDIR}/ShapeRotatorDlg.o
 
 
 # C Compiler Flags
@@ -56,16 +57,21 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/grafikaprojekt
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/grafika
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/grafikaprojekt: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/grafika: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/grafikaprojekt ${OBJECTFILES} ${LDLIBSOPTIONS} `wx-config --libs`
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/grafika ${OBJECTFILES} ${LDLIBSOPTIONS} `wx-config --libs`
 
-${OBJECTDIR}/main.o: main.cpp 
+${OBJECTDIR}/ShapeRotatorApp.o: ShapeRotatorApp.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -D_FILE_OFFSET_BITS=64 -DWXUSINGDLL -D__WXGTK__ -I/usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-3.0 -I/usr/include/wx-3.0 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -DWXUSINGDLL -D_FILE_OFFSET_BITS=64 -D__WXGTK__ -I/usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-3.0 -I/usr/include/wx-3.0 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ShapeRotatorApp.o ShapeRotatorApp.cpp
+
+${OBJECTDIR}/ShapeRotatorDlg.o: ShapeRotatorDlg.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DWXUSINGDLL -D_FILE_OFFSET_BITS=64 -D__WXGTK__ -I/usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-3.0 -I/usr/include/wx-3.0 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ShapeRotatorDlg.o ShapeRotatorDlg.cpp
 
 # Subprojects
 .build-subprojects:
@@ -73,7 +79,7 @@ ${OBJECTDIR}/main.o: main.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/grafikaprojekt
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/grafika
 
 # Subprojects
 .clean-subprojects:
