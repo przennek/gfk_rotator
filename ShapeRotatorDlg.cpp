@@ -515,8 +515,9 @@ void ShapeRotatorDlg::drawRoteted(wxCommandEvent& event){
         result[i][1] =daneY[i];
         result[i][2] =daneX[i+1];
         result[i][3] =daneY[i+1];
-        cout << daneX[i] <<" " << daneY[i]<< " "
-        << daneX[i +1] <<" " << daneY[i+ 1]<< endl;
+       // cout << daneX[i] <<" " << daneY[i]<< " "
+       // << daneX[i +1] <<" " << daneY[i+ 1]<< endl;
     }
-    
+    GenerateRotation gr(result,max);
+    gr.generate();
 }
