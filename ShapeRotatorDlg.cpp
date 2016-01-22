@@ -1,11 +1,3 @@
-//---------------------------------------------------------------------------
-//
-// Name:        ShapeRotatorDlg.cpp
-// Author:      Janusz Malinowski
-// Created:     2008-10-02 16:16:34
-// Description: ShapeRotatorDlg class implementation
-//
-//---------------------------------------------------------------------------
 
 #include "ShapeRotatorDlg.h"
 #include "vecmat.h"
@@ -15,7 +7,7 @@
 #include <string>
 #include <wx/dcbuffer.h>
 //#include <dcbuffer.h>
-
+using namespace std;
 std::vector <double> x_start,x_end,y_start,y_end,z_start,z_end;
 std::vector <int> R,G,B;
 double d=-2.0;
@@ -37,15 +29,26 @@ BEGIN_EVENT_TABLE(ShapeRotatorDlg,wxDialog)
 	
 	EVT_CLOSE(ShapeRotatorDlg::OnClose)
 	EVT_BUTTON(ID_WXBUTTON3,ShapeRotatorDlg::WxButton3Click)
+
+        EVT_BUTTON(ID_WXBUTTON1,ShapeRotatorDlg::drawRoteted)
 	
 	EVT_COMMAND_SCROLL(ID_WXSB_ROTATEZ,ShapeRotatorDlg::WxSB_RotateZScroll)
 	
 	EVT_COMMAND_SCROLL(ID_WXSB_ROTATEY,ShapeRotatorDlg::WxSB_RotateYScroll)
 	
 	EVT_COMMAND_SCROLL(ID_WXSB_ROTATEX,ShapeRotatorDlg::WxSB_RotateXScroll)
+
+        EVT_COMMAND_SCROLL(ID_WXSB_ROTATEX,ShapeRotatorDlg::WxSB_RotateXScroll)
+
+        EVT_COMMAND_SCROLL(ID_WXSB_ROTATEX,ShapeRotatorDlg::WxSB_RotateXScroll)
+        
+        EVT_COMMAND_SCROLL(ID_WXSB_ROTATEX,ShapeRotatorDlg::WxSB_RotateXScroll)
+        
+      
+       
 	
 	EVT_UPDATE_UI(ID_WXPANEL1,ShapeRotatorDlg::WxPanel1UpdateUI)
-END_EVENT_TABLE()
+        END_EVENT_TABLE()
 ////Event Table End
 
 ShapeRotatorDlg::ShapeRotatorDlg(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
@@ -61,19 +64,21 @@ ShapeRotatorDlg::~ShapeRotatorDlg()
 
 void ShapeRotatorDlg::CreateGUIControls()
 {
-	//Do not add custom code between
-	//GUI Items Creation Start and GUI Items Creation End.
-	//wxDev-C++ designer will remove them.
-	//Add the custom code before or after the blocks
-	////GUI Items Creation Start
 
+        
 	WxBoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	this->SetSizer(WxBoxSizer1);
 	this->SetAutoLayout(true);
+        drawOn = false;
+        cleared=false;
 
 	WxPanel1 = new wxPanel(this, ID_WXPANEL1, wxPoint(5, 5), wxSize(330, 288));
 	WxPanel1->SetForegroundColour(wxColour(_("WHITE")));
 	WxPanel1->SetBackgroundColour(wxColour(_("WHITE")));
+        WxPanel1->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( ShapeRotatorDlg::mouseClick ), NULL, this );
+	 
+        
+        
 	WxBoxSizer1->Add(WxPanel1, 1, wxEXPAND | wxALL, 5);
 
 	WxPanel2 = new wxPanel(this, ID_WXPANEL2, wxPoint(345, 10), wxSize(348, 278));
@@ -288,24 +293,24 @@ void  ShapeRotatorDlg::setPerspective(Vector4 *point3D, double d)
 
 void ShapeRotatorDlg::Repaint()
 {
-    /*wxClientDC dcOld(WxPanel);
-    wxClientDC dcOld2(WxPanel1);
-    wxBufferedDC dc(&dcOld);
-    wxBufferedDC dc2(&dcOld2);
+    wxClientDC dcOld(WxPanel2);
+  
+   wxBufferedDC dc(&dcOld);
+    //wxBufferedDC dc2(&dcOld2);
     int w,h, w2, h2; 
     double  d = 8;
     Matrix4 finalTransformationMatrix;
     Vector4 startVect, endVect;
 
-    WxPanel1->GetSize(&w2,&h2);
-    WxPanel->GetSize(&w,&h);
+
+    WxPanel2->GetSize(&w,&h);
     
-    dc2.SetBackground(wxBrush(RGB(255,255,255)));
-    dc2.Clear();
-    dc2.SetDeviceOrigin(w2/2, h2/2);
+    //dc2.SetBackground(wxBrush(RGB(255,255,255)));
+    //dc2.Clear();
+    //dc2.SetDeviceOrigin(w2/2, h2/2);
     
-    dc.SetBackground(wxBrush(RGB(255,255,255)));
-    dc.Clear();
+    //dc.SetBackground(wxBrush(RGB(255,255,255)));
+   // dc.Clear();
     dc.SetDeviceOrigin(w/2, h/2);
     
    
@@ -326,21 +331,22 @@ void ShapeRotatorDlg::Repaint()
             if(startVect.GetZ() > -d && endVect.GetZ() > -d){
                 setPerspective(&startVect,  d);
                 setPerspective(&endVect,  d);
-                dc.SetPen(wxPen(RGB(R.at(i),G.at(i),B.at(i))));
+                dc.SetPen(wxPen(wxColour(R.at(i),G.at(i),B.at(i))));
                 startVect.Set(startVect.GetX() * w/2,  startVect.GetY() * h/2,  startVect.GetZ());
                 endVect.Set(endVect.GetX() * w/2,  endVect.GetY() * h/2, endVect.GetY());
                 dc.DrawLine(startVect.GetX(),-startVect.GetY(),endVect.GetX(),-endVect.GetY());
             }  
     }    
-    */
+    
 }
 //MY CODE END
 /*
  * WxPanelUpdateUI
  */
+
 void ShapeRotatorDlg::WxPanelUpdateUI(wxUpdateUIEvent& event)
 {
- Repaint();
+// Repaint();
 }
 
 /*
@@ -383,7 +389,7 @@ void ShapeRotatorDlg::WxSB_RotateXScroll(wxScrollEvent& event)
  wxString str;
  str<<(WxSB_RotateX->GetThumbPosition());
  WxST_RotateX->SetLabel(str);
- Repaint();
+// Repaint();
 }
 
 
@@ -392,7 +398,7 @@ void ShapeRotatorDlg::WxSB_RotateYScroll(wxScrollEvent& event)
  wxString str;
  str<<(WxSB_RotateY->GetThumbPosition());
  WxST_RotateY->SetLabel(str);
- Repaint();
+//// Repaint();
 }
 
 
@@ -401,7 +407,7 @@ void ShapeRotatorDlg::WxSB_RotateZScroll(wxScrollEvent& event)
  wxString str;
  str<<(WxSB_RotateZ->GetThumbPosition());
  WxST_RotateZ->SetLabel(str);
- Repaint();
+// Repaint();
 }
 
 /*
@@ -431,12 +437,48 @@ void ShapeRotatorDlg::WxSB_ScaleZScroll(wxScrollEvent& event)
  Repaint();
 }
 */
-/*
- * WxPanel1UpdateUI
- */
+void ShapeRotatorDlg::mouseClick( wxMouseEvent& event )
+  {
+    wxClientDC dcx (WxPanel1);
+    wxBufferedDC dca (&dcx);  
+ 
+    if(!cleared){
+        dca.Clear();
+        cleared = true;
+    }
+        if(drawOn){
+            int x= event.GetX();
+            int y = event.GetY();
+            dca.DrawLine(drawX,drawY,x,y);
+            drawX= event.GetX();
+            drawY = event.GetY();
+            int sizeX, sizeY;
+            WxPanel1->GetSize(&sizeX,&sizeY);
+            daneX.push_back((double)drawX/(double)sizeX);
+            daneY.push_back((double)drawY/(double)sizeY);
+           // daneX.push_back(drawX);
+           //daneY.push_back(drawY);
+          // cout << drawX << " " << drawY << endl;
+            //drawOn = false;
+        }
+        else{
+            drawX= event.GetX();
+            drawY = event.GetY();
+            int sizeX, sizeY;
+            WxPanel1->GetSize(&sizeX,&sizeY);
+            daneX.push_back((double)drawX/(double)sizeX);
+            daneY.push_back((double)drawY/(double)sizeY);
+            // cout << drawX << " " << drawY << endl;
+           //daneX.push_back(drawX);
+           //daneY.push_back(drawY);
+            drawOn = true;
+        }
+        
+
+}
 void ShapeRotatorDlg::WxPanel1UpdateUI(wxUpdateUIEvent& event)
 {
-Repaint();
+//Repaint();
 }
 
 /*
@@ -453,4 +495,27 @@ void ShapeRotatorDlg::WxPanel1UpdateUI0(wxUpdateUIEvent& event)
 void ShapeRotatorDlg::WxButton3Click(wxCommandEvent& event)
 {
 	// insert your code here
+}
+
+void ShapeRotatorDlg::drawRoteted(wxCommandEvent& event){
+    int max = daneX.size() -daneX.size()%2 ;
+    double** result = new double*[max];
+    
+    for(int i = 0; i < max; i++) {
+        result[i] = new double[4];
+    }
+    
+    for(int i =0; i< max;i++){
+      // cout << daneX[i] <<" "<< daneY[i] << endl;
+    }
+    
+    for(int i =0; i < max; i++){
+        result[i][0] = daneX[i];
+        result[i][1] =daneY[i];
+        result[i][2] =daneX[i+1];
+        result[i][3] =daneY[i+1];
+        cout << daneX[i] <<" " << daneY[i]<< " "
+        << daneX[i +1] <<" " << daneY[i+ 1]<< endl;
+    }
+    
 }
