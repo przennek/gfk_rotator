@@ -1,4 +1,3 @@
-
 #include "ShapeRotatorDlg.h"
 #include "vecmat.h"
 #include "GenerateRotation.h"
@@ -31,6 +30,8 @@ BEGIN_EVENT_TABLE(ShapeRotatorDlg, wxDialog)
 
 EVT_CLOSE(ShapeRotatorDlg::OnClose)
 EVT_BUTTON(ID_WXBUTTON3, ShapeRotatorDlg::WxButton3Click)
+
+EVT_BUTTON(ID_WXBUTTON2, ShapeRotatorDlg::WxButton2Click)
 
 EVT_BUTTON(ID_WXBUTTON1, ShapeRotatorDlg::drawRoteted)
 
@@ -70,11 +71,16 @@ void ShapeRotatorDlg::CreateGUIControls() {
     this->SetAutoLayout(true);
     drawOn = false;
     cleared = false;
+    firstPointDrawn = false;
+    usingDrawMode = Line;
 
     WxPanel1 = new wxPanel(this, ID_WXPANEL1, wxPoint(5, 5), wxSize(330, 288));
     WxPanel1->SetForegroundColour(wxColour(_("WHITE")));
     WxPanel1->SetBackgroundColour(wxColour(_("WHITE")));
-    WxPanel1->Connect(wxEVT_LEFT_DOWN, wxMouseEventHandler(ShapeRotatorDlg::mouseClick), NULL, this);
+    WxPanel1->Connect(wxEVT_LEFT_DOWN, wxMouseEventHandler(ShapeRotatorDlg::mouseLeftClick), NULL, this);
+    WxPanel1->Connect(wxEVT_MOTION, wxMouseEventHandler(ShapeRotatorDlg::mouseMotion), NULL, this);
+    WxPanel1->Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(ShapeRotatorDlg::mouseRightClick), NULL, this);
+
 
 
 
@@ -443,8 +449,37 @@ void ShapeRotatorDlg::clear2DData() {
     daneX.clear();
     daneY.clear();
 }
-
-void ShapeRotatorDlg::mouseClick(wxMouseEvent& event) {
+void ShapeRotatorDlg::redraw2D() {
+    wxClientDC dcx(WxPanel1);
+    wxBufferedDC dca(&dcx);
+    dca.Clear();
+    int sizeX, sizeY;
+    WxPanel1->GetSize(&sizeX, &sizeY);
+    int dataSize = daneX.size();
+    
+    for(int i = 0;i< dataSize-1;i++) {
+        dca.DrawLine(daneX[i]*sizeX, daneY[i]*sizeY, daneX[i+1]*sizeX, daneY[i+1]*sizeY);
+    }
+}
+void ShapeRotatorDlg::mouseLeftClick(wxMouseEvent& event) {
+    if(usingDrawMode == Curve) {
+        drawOn = !drawOn;
+        drawX = event.GetX();
+        drawY = event.GetY();
+        
+    }  
+    drawLine(event);    
+}
+void ShapeRotatorDlg::mouseRightClick(wxMouseEvent& event) {
+    drawOn = false;
+}
+void ShapeRotatorDlg::mouseMotion(wxMouseEvent& event) {
+    updateMouseMovePos(event);
+    searchNearVertex(event);
+    if(usingDrawMode == Curve && drawOn)
+        drawCurve(event);
+}
+void ShapeRotatorDlg::drawLine(wxMouseEvent& event) {
     wxClientDC dcx(WxPanel1);
     wxBufferedDC dca(&dcx);
 
@@ -455,38 +490,87 @@ void ShapeRotatorDlg::mouseClick(wxMouseEvent& event) {
         cleared = true;
     }
     if (drawOn) {
-        int x = event.GetX();
-        int y = event.GetY();
-        dca.DrawLine(drawX, drawY, x, y);
-        drawX = event.GetX();
-        drawY = event.GetY();
+       // int x = event.GetX();
+       // int y = event.GetY();
+        int x = mouseMovePosX;
+        int y = mouseMovePosY;
+        dca.DrawLine(drawX, drawY, mouseMovePosX, mouseMovePosY);
+        //drawX = event.GetX();
+        //drawY = event.GetY();
         int sizeX, sizeY;
         WxPanel1->GetSize(&sizeX, &sizeY);
         daneX.push_back((double) drawX / (double) sizeX);
         daneY.push_back((double) drawY / (double) sizeY);
+        daneX.push_back((double) x / (double) sizeX);
+        daneY.push_back((double) y / (double) sizeY);
+        drawX = x;
+        drawY = y;
         // daneX.push_back(drawX);
         //daneY.push_back(drawY);
-        // cout << drawX << " " << drawY << endl;
+        //cout << mouseMovePosX << " " << mouseMovePosY << endl;
         //drawOn = false;
-    } else {
-        drawX = event.GetX();
-        drawY = event.GetY();
-        int sizeX, sizeY;
-        WxPanel1->GetSize(&sizeX, &sizeY);
-        daneX.push_back((double) drawX / (double) sizeX);
-        daneY.push_back((double) drawY / (double) sizeY);
+    } else if(usingDrawMode == Line) {
+        if (!firstPointDrawn) {
+            drawX = event.GetX();
+            drawY = event.GetY();
+        }
+        //int sizeX, sizeY;
+        //WxPanel1->GetSize(&sizeX, &sizeY);
+        //daneX.push_back((double) drawX / (double) sizeX);
+        //daneY.push_back((double) drawY / (double) sizeY);
         // cout << drawX << " " << drawY << endl;
         //daneX.push_back(drawX);
         //daneY.push_back(drawY);
         drawOn = true;
+        firstPointDrawn = true;
     }
 
 
 }
 
+void ShapeRotatorDlg::drawFloatingLine() {
+     if (drawOn) {
+        wxClientDC dcx(WxPanel1);
+        wxBufferedDC dca(&dcx);
+        dca.DrawLine(drawX, drawY, mouseMovePosX, mouseMovePosY);
+     }
+    
+}
+void ShapeRotatorDlg::searchNearVertex(wxMouseEvent& event) {
+    int searchRadius = 10;
+    int num_of_points =  daneX.size();
+    int sizeX, sizeY;
+    WxPanel1->GetSize(&sizeX, &sizeY);
+    for(int i = 0;i < num_of_points; i++) {
+        if(sqrt(pow((event.GetX() - daneX[i]*sizeX), 2) + pow((event.GetY() - daneY[i]*sizeY), 2)) <= searchRadius)
+        {
+            mouseMovePosX =  daneX[i]*sizeX;
+            mouseMovePosY = daneY[i]*sizeY;
+            break;
+        }
+    }
+}
+void ShapeRotatorDlg::drawCurve(wxMouseEvent& event) {
+    int drawStep = 3;
+    int sizeX, sizeY;
+    WxPanel1->GetSize(&sizeX, &sizeY);
+    if(daneX.size() > 0 && sqrt(pow((mouseMovePosX - daneX.back()*sizeX), 2) + pow((mouseMovePosY - daneY.back()*sizeY), 2)) >= drawStep) {
+        drawLine(event);
+    }
+
+}
+void ShapeRotatorDlg::updateMouseMovePos(wxMouseEvent& event) {
+    mouseMovePosX = event.GetX();
+    mouseMovePosY = event.GetY();
+}
 void ShapeRotatorDlg::WxPanel1UpdateUI(wxUpdateUIEvent& event) {
     
-    //Repaint();
+    Repaint();
+    redraw2D();
+    if(usingDrawMode == Line)
+        drawFloatingLine();
+        
+    
 }
 
 /*
@@ -504,7 +588,16 @@ void ShapeRotatorDlg::WxPanel1UpdateUI0(wxUpdateUIEvent& event) {
 void ShapeRotatorDlg::WxButton3Click(wxCommandEvent& event) {
     // insert your code here
 }
-
+void ShapeRotatorDlg::WxButton2Click(wxCommandEvent& event) {
+    clearAll();
+}
+void ShapeRotatorDlg::clearAll() {
+    clear2DData();
+    clear3DData();
+    drawOn = false;
+    cleared = false;
+    firstPointDrawn = false;
+}
 void ShapeRotatorDlg::drawRoteted(wxCommandEvent& event) {
     int max = daneX.size() - daneX.size() % 2;
     double** result = new double*[max];

@@ -39,6 +39,10 @@
 #define ShapeRotatorDlg_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
 ////Dialog Style End
 
+enum drawMode {
+                Line = 0,
+                Curve = 1
+            };
 class Vector4;
 class Matrix4;
 
@@ -47,7 +51,10 @@ class ShapeRotatorDlg : public wxDialog
 	private:
             bool cleared;
             bool drawOn;
+            bool firstPointDrawn;
             int drawX, drawY;
+            int mouseMovePosX, mouseMovePosY;
+            drawMode usingDrawMode;
             std::vector <double> daneY, daneX;
 		DECLARE_EVENT_TABLE();
 		
@@ -79,9 +86,19 @@ class ShapeRotatorDlg : public wxDialog
                 //void Resize(wxUpdateUIEvent& event);
                 void clear3DData();
                 void clear2DData();
-		void WxButton3Click(wxCommandEvent& event);
-                void mouseClick(wxMouseEvent& event);
+                void redraw2D();
+		void WxButton2Click(wxCommandEvent& event);
+                void WxButton3Click(wxCommandEvent& event);
+                void mouseLeftClick(wxMouseEvent& event);
+                void mouseRightClick(wxMouseEvent& event);
+                void mouseMotion(wxMouseEvent& event);
+                void drawLine(wxMouseEvent& event);
                 void drawRoteted(wxCommandEvent& event);
+                void drawFloatingLine();
+                void updateMouseMovePos(wxMouseEvent& event); 
+                void searchNearVertex(wxMouseEvent& event);
+                void clearAll();
+                void drawCurve(wxMouseEvent& event);
 	
 	private:
 		//Do not add custom control declarations between 

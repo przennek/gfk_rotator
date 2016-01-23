@@ -7,8 +7,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/gr/Pulpit/gfkk/grafika/ShapeRotatorDlg.h</file>
-            <file>file:/home/gr/Pulpit/gfkk/grafika/ShapeRotatorDlg.cpp</file>
+            <file>file:/home/kamil/projekt_grafika/grafika/main.cpp</file>
+            <file>file:/home/kamil/projekt_grafika/grafika/ShapeRotatorDlg.h</file>
+            <file>file:/home/kamil/projekt_grafika/grafika/GenerateRotation.h</file>
+            <file>file:/home/kamil/projekt_grafika/grafika/vecmat.h</file>
+            <file>file:/home/kamil/projekt_grafika/grafika/ShapeRotatorDlg.cpp</file>
+            <file>file:/home/kamil/projekt_grafika/grafika/ShapeRotatorApp.cpp</file>
         </group>
     </open-files>
 </project-private>
