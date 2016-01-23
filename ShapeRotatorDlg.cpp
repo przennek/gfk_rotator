@@ -599,7 +599,8 @@ void ShapeRotatorDlg::clearAll() {
     firstPointDrawn = false;
 }
 void ShapeRotatorDlg::drawRoteted(wxCommandEvent& event) {
-    int max = daneX.size() - daneX.size() % 2;
+    int max = daneX.size() - daneX.size() % 2 -1;
+    cout << max << endl;
     double** result = new double*[max];
 
     for (int i = 0; i < max; i++) {
@@ -623,7 +624,8 @@ void ShapeRotatorDlg::drawRoteted(wxCommandEvent& event) {
     
     delete [] result;
     
-    for (int i = 0; i < gr.get_vec_num() * 3 * (360/gr.get_angle()); i++) {
+    for (int i = 0; i < (gr.get_vec_num()) * 3 * (360/gr.get_angle()) ; i++) {
+ 
         x_start.push_back(rotations[i][0]);
         y_start.push_back(rotations[i][1]);
         z_start.push_back(rotations[i][2]);
