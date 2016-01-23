@@ -32,14 +32,15 @@ public:
     }
 
     double** generate() {
+        // alokacja na wektor wyjściowy
         int size = point_no * 3 * (360 / angle);
         double **vecs = new double*[size];
-        
-        double ***out = generateSkeleton();
         for (int i = 0; i < size; i++) {
             vecs[i] = new double[get_number_of_fields()];
         }
-
+        
+        // szkielet
+        double ***out = generateSkeleton();
         for (int k = 0; k < point_no; k++) {
             for (int j = 0; j < 360 / angle; j++) {
                 for (int i = 0; i < get_number_of_fields(); i++) {
@@ -47,9 +48,9 @@ public:
                 }
             }
         }
-
         free_3d_arr(out);
-
+        
+        // połączenia początków
         ConTypes startConnections = START_CONNECTIONS;
         out = generateConnections(startConnections);
         for (int k = point_no; k < point_no * 2; k++) {
@@ -59,9 +60,9 @@ public:
                 }
             }
         }
-        
         free_3d_arr(out);
-
+        
+        // połączenia końców
         ConTypes endConnections = END_CONNECTIONS;
         out = generateConnections(endConnections);
         for (int k = point_no * 2; k < point_no * 3; k++) {
@@ -71,23 +72,23 @@ public:
                 }
             }
         }
-//        printTable(vecs, point_no * 3 * (360/angle), number_of_fields);
         free_3d_arr(out);
+        
         return vecs;
     }
 
     int get_number_of_fields() {
         return number_of_fields;
     }
-    
+
     int get_angle() {
         return angle;
     }
-    
+
     int get_vec_num() {
         return point_no;
     }
-    
+
     void free_3d_arr(double ***out) {
         for (int k = 0; k < point_no; k++) {
             for (int j = 0; j < 360 / angle; j++) {
@@ -97,14 +98,14 @@ public:
         }
         delete [] out;
     }
-    
+
     void free_2d_arr(double **out) {
         for (int k = 0; k < 3 * point_no * (360 / angle); k++) {
             delete [] out[k];
         }
         delete [] out;
     }
-    
+
 private:
     // tablica [ilosc_puntkow][4] - xpocz, zpocz, xkon, zkon
     double** inputVectors;
@@ -119,7 +120,6 @@ private:
     static const int number_of_fields = 9;
 
     // obraca jeden punkt o zadany kąt wokół osi Z
-
     double* rotateZ(double x, double y, double z, double angle) {
         double* points = new double[3];
         angle = angle * ((2 * 3.1415) / 360.0);
@@ -140,14 +140,7 @@ private:
     }
 
     double*** generateSkeleton() {
-        double ***generated_points = new double**[point_no];
-        for (int i = 0; i < point_no; i++) {
-            int size = 360 / angle;
-            generated_points[i] = new double*[size];
-            for (int j = 0; j < size; j++) {
-                generated_points[i][j] = new double[number_of_fields];
-            }
-        }
+        double ***generated_points = create_3d_arr();
 
         for (int i = 0; i < point_no; i++) {
             int counter = 0;
@@ -161,9 +154,6 @@ private:
                 generated_points[i][counter][3] = end_points[0];
                 generated_points[i][counter][4] = end_points[1];
                 generated_points[i][counter][5] = end_points[2];
-                generated_points[i][counter][6] = 255;
-                generated_points[i][counter][7] = 0;
-                generated_points[i][counter][8] = 0;
 
                 delete [] start_points;
                 delete [] end_points;
@@ -175,52 +165,30 @@ private:
     }
 
     double*** generateConnections(ConTypes ctype) {
-        double ***generated_points = new double**[point_no];
-        for (int i = 0; i < point_no; i++) {
-            int size = (360 / angle) + 1;
-            generated_points[i] = new double*[size];
-            for (int j = 0; j < size; j++) {
-                generated_points[i][j] = new double[number_of_fields];
-            }
-        }
-
-        double pre_start_x,
-                pre_start_y,
-                pre_start_z;
+        double ***generated_points = create_3d_arr();
+        double pre_start_x, pre_start_y, pre_start_z;
 
         for (int i = 0; i < point_no; i++) {
             int counter = 0;
             for (double angle_multiplier = 0; angle_multiplier * angle <= 360; angle_multiplier++) {
                 double *start_points = rotateZ(inputVectors[i][0 + static_cast<int> (ctype)], 0, inputVectors[i][1 + static_cast<int> (ctype)], angle * angle_multiplier);
-
                 if (angle_multiplier == 0) {
                     pre_start_x = start_points[0];
                     pre_start_y = start_points[1];
                     pre_start_z = start_points[2];
 
                     delete [] start_points;
-                    double *start_points = rotateZ(inputVectors[i][0 + static_cast<int> (ctype)], 0, inputVectors[i][1 + static_cast<int> (ctype)], -angle);
-                    generated_points[i][counter][0] = start_points[0];
-                    generated_points[i][counter][1] = start_points[1];
-                    generated_points[i][counter][2] = start_points[2];
-                    generated_points[i][counter][3] = pre_start_x;
-                    generated_points[i][counter][4] = pre_start_y;
-                    generated_points[i][counter][5] = pre_start_z;
-                    generated_points[i][counter][6] = 255;
-                    generated_points[i][counter][7] = 0;
-                    generated_points[i][counter][8] = 0;
+                    start_points = rotateZ(inputVectors[i][0 + static_cast<int> (ctype)], 0, inputVectors[i][1 + static_cast<int> (ctype)], -angle);
+                }
+                
+                generated_points[i][counter][0] = start_points[0];
+                generated_points[i][counter][1] = start_points[1];
+                generated_points[i][counter][2] = start_points[2];
+                generated_points[i][counter][3] = pre_start_x;
+                generated_points[i][counter][4] = pre_start_y;
+                generated_points[i][counter][5] = pre_start_z;
 
-                } else {
-                    generated_points[i][counter][0] = start_points[0];
-                    generated_points[i][counter][1] = start_points[1];
-                    generated_points[i][counter][2] = start_points[2];
-                    generated_points[i][counter][3] = pre_start_x;
-                    generated_points[i][counter][4] = pre_start_y;
-                    generated_points[i][counter][5] = pre_start_z;
-                    generated_points[i][counter][6] = 255;
-                    generated_points[i][counter][7] = 0;
-                    generated_points[i][counter][8] = 0;
-
+                if (angle_multiplier != 0) {
                     pre_start_x = start_points[0];
                     pre_start_y = start_points[1];
                     pre_start_z = start_points[2];
@@ -231,6 +199,28 @@ private:
             }
 
         }
+        return generated_points;
+    }
+
+    double ***create_3d_arr() {
+        double ***generated_points = new double**[point_no];
+        for (int i = 0; i < point_no; i++) {
+            int size = (360 / angle) + 1;
+            generated_points[i] = new double*[size];
+            for (int j = 0; j < size; j++) {
+                generated_points[i][j] = new double[number_of_fields];
+            }
+        }
+        
+        for (int i = 0; i < point_no; i++) {
+            int size = (360 / angle) + 1;
+            for (int j = 0; j < size; j++) {
+                for (int k = 0; k < number_of_fields; k++) {
+                    generated_points[i][j][k] = 0;
+                }
+            }
+        }
+
         return generated_points;
     }
 };

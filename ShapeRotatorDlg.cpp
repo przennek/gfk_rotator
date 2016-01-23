@@ -600,7 +600,6 @@ void ShapeRotatorDlg::clearAll() {
 }
 void ShapeRotatorDlg::drawRoteted(wxCommandEvent& event) {
     int max = daneX.size() - daneX.size() % 2 -1;
-    cout << max << endl;
     double** result = new double*[max];
 
     for (int i = 0; i < max; i++) {
