@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>Drawer3D.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -12,12 +13,15 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>Drawer3D.cpp</itemPath>
+      <itemPath>GenerateRotation.cpp</itemPath>
       <itemPath>GenerateRotation.h</itemPath>
       <itemPath>ShapeRotator.wxform</itemPath>
       <itemPath>ShapeRotatorApp.cpp</itemPath>
       <itemPath>ShapeRotatorApp.h</itemPath>
       <itemPath>ShapeRotatorDlg.cpp</itemPath>
       <itemPath>ShapeRotatorDlg.h</itemPath>
+      <itemPath>vecmat.cpp</itemPath>
       <itemPath>vecmat.h</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -57,6 +61,12 @@
           <commandLine>`wx-config --libs`</commandLine>
         </linkerTool>
       </compileType>
+      <item path="Drawer3D.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Drawer3D.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GenerateRotation.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="GenerateRotation.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ShapeRotator.wxform" ex="false" tool="3" flavor2="0">
@@ -68,6 +78,8 @@
       <item path="ShapeRotatorDlg.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ShapeRotatorDlg.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="vecmat.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="vecmat.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -92,6 +104,12 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="Drawer3D.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Drawer3D.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GenerateRotation.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="GenerateRotation.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ShapeRotator.wxform" ex="false" tool="3" flavor2="0">
@@ -103,6 +121,8 @@
       <item path="ShapeRotatorDlg.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ShapeRotatorDlg.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="vecmat.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="vecmat.h" ex="false" tool="3" flavor2="0">
       </item>

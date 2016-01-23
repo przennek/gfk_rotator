@@ -35,8 +35,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/Drawer3D.o \
+	${OBJECTDIR}/GenerateRotation.o \
 	${OBJECTDIR}/ShapeRotatorApp.o \
-	${OBJECTDIR}/ShapeRotatorDlg.o
+	${OBJECTDIR}/ShapeRotatorDlg.o \
+	${OBJECTDIR}/vecmat.o
 
 
 # C Compiler Flags
@@ -63,6 +66,16 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/grafika: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/grafika ${OBJECTFILES} ${LDLIBSOPTIONS} `wx-config --libs`
 
+${OBJECTDIR}/Drawer3D.o: Drawer3D.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DWXUSINGDLL -D_FILE_OFFSET_BITS=64 -D__WXGTK__ -I/usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-3.0 -I/usr/include/wx-3.0 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Drawer3D.o Drawer3D.cpp
+
+${OBJECTDIR}/GenerateRotation.o: GenerateRotation.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DWXUSINGDLL -D_FILE_OFFSET_BITS=64 -D__WXGTK__ -I/usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-3.0 -I/usr/include/wx-3.0 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GenerateRotation.o GenerateRotation.cpp
+
 ${OBJECTDIR}/ShapeRotatorApp.o: ShapeRotatorApp.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -72,6 +85,11 @@ ${OBJECTDIR}/ShapeRotatorDlg.o: ShapeRotatorDlg.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -DWXUSINGDLL -D_FILE_OFFSET_BITS=64 -D__WXGTK__ -I/usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-3.0 -I/usr/include/wx-3.0 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ShapeRotatorDlg.o ShapeRotatorDlg.cpp
+
+${OBJECTDIR}/vecmat.o: vecmat.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DWXUSINGDLL -D_FILE_OFFSET_BITS=64 -D__WXGTK__ -I/usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-3.0 -I/usr/include/wx-3.0 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/vecmat.o vecmat.cpp
 
 # Subprojects
 .build-subprojects:

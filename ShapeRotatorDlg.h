@@ -32,8 +32,12 @@
 #include <wx/stattext.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
-////Header Include End
+//#include "vecmat.h"
 
+#include "Drawer3D.h"
+////Header Include End
+class Vector4;
+class Matrix4;
 ////Dialog Style Start
 #undef ShapeRotatorDlg_STYLE
 #define ShapeRotatorDlg_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
@@ -45,6 +49,7 @@ enum drawMode {
             };
 class Vector4;
 class Matrix4;
+//class Drawer3D;
 
 class ShapeRotatorDlg : public wxDialog
 {
@@ -55,6 +60,8 @@ class ShapeRotatorDlg : public wxDialog
             int drawX, drawY;
             int mouseMovePosX, mouseMovePosY;
             drawMode usingDrawMode;
+            Drawer3D drawer3D;
+            Vector4 *rotationVector;
             std::vector <double> daneY, daneX;
 		DECLARE_EVENT_TABLE();
 		
@@ -62,29 +69,12 @@ class ShapeRotatorDlg : public wxDialog
 		ShapeRotatorDlg(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("ShapeRotator"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = ShapeRotatorDlg_STYLE);
 		virtual ~ShapeRotatorDlg();
 		void WxButton1Click(wxCommandEvent& event);
-		void WxButtonLoadClick(wxCommandEvent& event);
 		void ShapeRotatorDlgPaint(wxPaintEvent& event);
-		void Repaint();
-		void initializeVectors();
-		void deleteVectors();
-        Matrix4 getRotationMatrix(Vector4 *rotAngle);
-		Matrix4 getScaleMatrix(Vector4 *scale);
-		Matrix4 getTranslateMatrix(Vector4 *translation);
-		void setPerspective(Vector4 *point3D, double d);
-        void WxPanelUpdateUI(wxUpdateUIEvent& event);
-		void WxSB_TranslationXScroll(wxScrollEvent& event);
-		void WxSB_TranslationYScroll(wxScrollEvent& event);
-		void WxSB_TranslationZScroll(wxScrollEvent& event);
+                void OnKeyDown(wxKeyEvent& event);
 		void WxSB_RotateXScroll(wxScrollEvent& event);
 		void WxSB_RotateYScroll(wxScrollEvent& event);
 		void WxSB_RotateZScroll(wxScrollEvent& event);
-		void WxSB_ScaleXScroll(wxScrollEvent& event);
-		void WxSB_ScaleYScroll(wxScrollEvent& event);
-		void WxSB_ScaleZScroll(wxScrollEvent& event);
 		void WxPanel1UpdateUI(wxUpdateUIEvent& event);
-		void WxPanel1UpdateUI0(wxUpdateUIEvent& event);
-                //void Resize(wxUpdateUIEvent& event);
-                void clear3DData();
                 void clear2DData();
                 void redraw2D();
 		void WxButton2Click(wxCommandEvent& event);
@@ -99,6 +89,8 @@ class ShapeRotatorDlg : public wxDialog
                 void searchNearVertex(wxMouseEvent& event);
                 void clearAll();
                 void drawCurve(wxMouseEvent& event);
+                void OnScroll();
+                void connectKeyDownEvent(wxWindow* pclComponent);
 	
 	private:
 		//Do not add custom control declarations between 
@@ -126,8 +118,8 @@ class ShapeRotatorDlg : public wxDialog
 		wxPanel *WxPanel1;
 		wxBoxSizer *WxBoxSizer1;
 		////GUI Control Declaration End
-		Vector4 *rotAngleV, *scaleV, *translationV; 
-		Matrix4 *rotationMatrixComplete,  *rotationMatrixX, *rotationMatrixY, *rotationMatrixZ,  *scaleMatrix, *translationMatrix, *perspectiveMatrix;
+                wxBufferedDC WxPanel2Buff;
+		
 		
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to

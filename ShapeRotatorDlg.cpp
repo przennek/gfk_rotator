@@ -1,16 +1,16 @@
 #include "ShapeRotatorDlg.h"
-#include "vecmat.h"
 #include "GenerateRotation.h"
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <wx/dcbuffer.h>
+#include "vecmat.h"
+//#include "Drawer3D.h"
+
 //#include <dcbuffer.h>
 using namespace std;
-std::vector <double> x_start, x_end, y_start, y_end, z_start, z_end;
-std::vector <int> R, G, B;
-double d = -2.0;
+
 
 //Do not add custom headers
 //wxDev-C++ designer will remove them
@@ -57,7 +57,7 @@ END_EVENT_TABLE()
 ShapeRotatorDlg::ShapeRotatorDlg(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxDialog(parent, id, title, position, size, style) {
     CreateGUIControls();
-    initializeVectors();
+    //initializeVectors();
 }
 
 ShapeRotatorDlg::~ShapeRotatorDlg() {
@@ -74,15 +74,15 @@ void ShapeRotatorDlg::CreateGUIControls() {
     firstPointDrawn = false;
     usingDrawMode = Line;
 
+    
+//    wxPanel* keyPane = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS);
+//    keyPane->Bind(wxEVT_CHAR_HOOK, &ShapeRotatorDlg::OnKeyDown, this);
     WxPanel1 = new wxPanel(this, ID_WXPANEL1, wxPoint(5, 5), wxSize(330, 288));
     WxPanel1->SetForegroundColour(wxColour(_("WHITE")));
     WxPanel1->SetBackgroundColour(wxColour(_("WHITE")));
     WxPanel1->Connect(wxEVT_LEFT_DOWN, wxMouseEventHandler(ShapeRotatorDlg::mouseLeftClick), NULL, this);
     WxPanel1->Connect(wxEVT_MOTION, wxMouseEventHandler(ShapeRotatorDlg::mouseMotion), NULL, this);
     WxPanel1->Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(ShapeRotatorDlg::mouseRightClick), NULL, this);
-
-
-
 
     WxBoxSizer1->Add(WxPanel1, 1, wxEXPAND | wxALL, 5);
 
@@ -151,297 +151,49 @@ void ShapeRotatorDlg::CreateGUIControls() {
     GetSizer()->SetSizeHints(this);
     Center();
 
-    ////GUI Items Creation End
-    //WxOpenFileDialog->SetWildcard("Geometry file (*.geo)|*.geo");
-    /*
-WxSB_TranslationX->SetScrollbar(50, 1, 101, 1,true);
-    WxSB_TranslationX->Enable(true);
-    WxSB_TranslationY->SetScrollbar(50, 1, 101, 1,true);
-    WxSB_TranslationY->Enable(true);
-    WxSB_TranslationZ->SetScrollbar(50, 1, 101, 1,true);
-    WxSB_TranslationZ->Enable(true);
-     */
     WxSB_RotateX->SetScrollbar(0, 1, 361, 1, true);
     WxSB_RotateX->Enable(true);
     WxSB_RotateY->SetScrollbar(0, 1, 361, 1, true);
     WxSB_RotateY->Enable(true);
     WxSB_RotateZ->SetScrollbar(0, 1, 361, 1, true);
     WxSB_RotateZ->Enable(true);
+    
+    this->connectKeyDownEvent(this);
+    //Init other depends objects 
+    drawer3D = Drawer3D(WxPanel2);
+    rotationVector = new Vector4();
+    //OnScroll();
 
-    /*
-    WxSB_ScaleX->SetScrollbar(99, 1, 200, 1,true);
-        WxSB_ScaleX->Enable(true);
-    WxSB_ScaleY->SetScrollbar(99, 1, 200, 1,true);
-        WxSB_ScaleY->Enable(true);
-    WxSB_ScaleZ->SetScrollbar(99, 1, 200, 1,true);
-        WxSB_ScaleZ->Enable(true);	
-     */
+
 }
 
 void ShapeRotatorDlg::OnClose(wxCloseEvent& /*event*/) {
-    deleteVectors();
+    //deleteVectors();
+    delete rotationVector; 
     Destroy();
 }
-
-
-/*
- * WxButtonLoadClick
- */
-void ShapeRotatorDlg::WxButtonLoadClick(wxCommandEvent& event) {
-    /*if (WxOpenFileDialog->ShowModal()==wxID_OK)
-    {
-     double x1,y1,z1,x2,y2,z2;
-     int r,g,b;
-  
-     std::string line;
-     std::ifstream in(WxOpenFileDialog->GetPath().ToAscii());
-     if (in.is_open())
-     {
-      x_start.clear();y_start.clear();z_start.clear();
-      x_end.clear();y_end.clear();z_end.clear();
-      R.clear();G.clear();B.clear();
-      while (!in.eof())
-      {
-       in>>x1>>y1>>z1>>x2>>y2>>z2>>r>>g>>b;
-       x_start.push_back(x1);x_end.push_back(x2);
-       y_start.push_back(y1);y_end.push_back(y2);
-       z_start.push_back(z1);z_end.push_back(z2);
-       R.push_back(r);G.push_back(g);B.push_back(b);
-      }
-      in.close();
-     }
-    }*/
-}
-
-//MY CODE START
-
-void ShapeRotatorDlg::initializeVectors() {
-    rotAngleV = new Vector4();
-    scaleV = new Vector4();
-    translationV = new Vector4();
-    rotationMatrixComplete = new Matrix4();
-    rotationMatrixX = new Matrix4();
-    rotationMatrixY = new Matrix4();
-    rotationMatrixZ = new Matrix4();
-    translationMatrix = new Matrix4();
-    scaleMatrix = new Matrix4();
-    perspectiveMatrix = new Matrix4();
-}
-
-void ShapeRotatorDlg::deleteVectors() {
-    delete rotAngleV;
-    delete scaleV;
-    delete translationV;
-    delete rotationMatrixComplete;
-    delete rotationMatrixX;
-    delete rotationMatrixY;
-    delete rotationMatrixZ;
-    delete translationMatrix;
-    delete scaleMatrix;
-    delete perspectiveMatrix;
-}
-
-Matrix4 ShapeRotatorDlg::getRotationMatrix(Vector4 *rotAngle) {
-    rotationMatrixX->data[0][0] = 1;
-    rotationMatrixX->data[1][1] = cos(rotAngle->GetX());
-    rotationMatrixX->data[1][2] = -sin(rotAngle->GetX());
-    rotationMatrixX->data[2][1] = sin(rotAngle->GetX());
-    rotationMatrixX->data[2][2] = cos(rotAngle->GetX());
-
-    rotationMatrixY->data[0][0] = cos(rotAngle->GetY());
-    rotationMatrixY->data[0][2] = sin(rotAngle->GetY());
-    rotationMatrixY->data[1][1] = 1;
-    rotationMatrixY->data[2][0] = -sin(rotAngle->GetY());
-    rotationMatrixY->data[2][2] = cos(rotAngle->GetY());
-
-    rotationMatrixZ->data[0][0] = cos(rotAngle->GetZ());
-    rotationMatrixZ->data[0][1] = -sin(rotAngle->GetZ());
-    rotationMatrixZ->data[1][0] = sin(rotAngle->GetZ());
-    rotationMatrixZ->data[1][1] = cos(rotAngle->GetZ());
-    rotationMatrixZ->data[2][2] = 1;
-
-    *rotationMatrixComplete = (*rotationMatrixX) * (*rotationMatrixY) * (*rotationMatrixZ);
-    return *rotationMatrixComplete;
-
-}
-
-Matrix4 ShapeRotatorDlg::getTranslateMatrix(Vector4 *trans) {
-    for (int i = 0; i <= 3; ++i) {
-        translationMatrix->data[i][i] = 1;
-    }
-    translationMatrix->data[0][3] = trans->GetX();
-    translationMatrix->data[1][3] = trans->GetY();
-    translationMatrix->data[2][3] = trans->GetZ();
-    return *translationMatrix;
-}
-
-Matrix4 ShapeRotatorDlg::getScaleMatrix(Vector4 *scale) {
-    scaleMatrix->data[0][0] = scale->GetX();
-    scaleMatrix->data[1][1] = scale->GetY();
-    scaleMatrix->data[2][2] = scale->GetZ();
-    return *scaleMatrix;
-}
-
-void ShapeRotatorDlg::setPerspective(Vector4 *point3D, double d) {
-    /*perspectiveMatrix->data[0][0] = 1;
-    perspectiveMatrix->data[1][1] = 1;
-    perspectiveMatrix->data[2][3] = 1/d;
-     *point3D = *perspectiveMatrix * (*point3D);
-    point3D->Set(point3D->GetX()/point3D->GetZ(), point3D->GetY()/point3D->GetZ(), point3D->GetZ());*/
-    point3D->Set(point3D->GetX() / (1 + point3D->GetZ() / d), point3D->GetY() / (1 + point3D->GetZ() / d), point3D->GetZ());
-}
-
-void ShapeRotatorDlg::Repaint() {
-    wxClientDC dcOld(WxPanel2);
-
-    wxBufferedDC dc(&dcOld);
-    //wxBufferedDC dc2(&dcOld2);
-    int w, h, w2, h2;
-    double d = 8;
-    Matrix4 finalTransformationMatrix;
-    Vector4 startVect, endVect;
-
-
-    WxPanel2->GetSize(&w, &h);
-
-    //dc2.SetBackground(wxBrush(RGB(255,255,255)));
-    //dc2.Clear();
-    //dc2.SetDeviceOrigin(w2/2, h2/2);
-
-    //dc.SetBackground(wxBrush(RGB(255,255,255)));
-    dc.Clear();
-    dc.SetDeviceOrigin(w / 2, h / 2);
-
-
-
-    rotAngleV->Set((M_PI * WxSB_RotateX->GetThumbPosition()) / 180.0, (M_PI * WxSB_RotateY->GetThumbPosition()) / 180.0, (M_PI * WxSB_RotateZ->GetThumbPosition()) / -180.0);
-    //translationV->Set((WxSB_TranslationX->GetThumbPosition() -50 )/25.0, (WxSB_TranslationY->GetThumbPosition() -50 )/25.0, (WxSB_TranslationZ->GetThumbPosition() -50 )/25.0);
-    //    scaleV->Set(((WxSB_ScaleX->GetThumbPosition() +1) )/120.0, ((WxSB_ScaleY->GetThumbPosition() +1) )/120.0, ((WxSB_ScaleZ->GetThumbPosition() +1) )/120.0);
-
-    finalTransformationMatrix =  getRotationMatrix(rotAngleV);
-
-    int x_start_size = x_start.size();
-
-    for (int i = 0; i < x_start_size; ++i) {
-        startVect.Set(x_start[i], y_start[i], -z_start[i]);
-        endVect.Set(x_end[i], y_end[i], -z_end[i]);
-        startVect = finalTransformationMatrix * startVect;
-        endVect = finalTransformationMatrix * endVect;
-        if (startVect.GetZ() > -d && endVect.GetZ() > -d) {
-            setPerspective(&startVect, d);
-            setPerspective(&endVect, d);
-            dc.SetPen(wxPen(wxColour(R.at(i), G.at(i), B.at(i))));
-            startVect.Set(startVect.GetX() * w / 2, startVect.GetY() * h / 2, startVect.GetZ());
-            endVect.Set(endVect.GetX() * w / 2, endVect.GetY() * h / 2, endVect.GetY());
-            dc.DrawLine(startVect.GetX(), -startVect.GetY(), endVect.GetX(), -endVect.GetY());
-        }
-    }
-
-}
-//MY CODE END
-
-/*
- * WxPanelUpdateUI
- */
-
-void ShapeRotatorDlg::WxPanelUpdateUI(wxUpdateUIEvent& event) {
-    // Repaint();
-}
-
-/*
- * WxSB_TranslacjaXScroll
- */
-/*void ShapeRotatorDlg::WxSB_TranslationXScroll(wxScrollEvent& event)
-{
- wxString str;
-// str<<(WxSB_TranslationX->GetThumbPosition()-50)/20.0;
- WxST_TranslationX->SetLabel(str);
- Repaint();
-}
- */
-/*
- * WxSB_TranslationYScroll
- */
-/*
-void ShapeRotatorDlg::WxSB_TranslationYScroll(wxScrollEvent& event)
-{
- wxString str;
- str<<(WxSB_TranslationY->GetThumbPosition()-50)/20.0;
- WxST_TranslationY->SetLabel(str);
- Repaint();
-}
- */
-/*
- * WxSB_TranslationZScroll
- */
-
-/*void ShapeRotatorDlg::WxSB_TranslationZScroll(wxScrollEvent& event)
-{
- wxString str;
- str<<(WxSB_TranslationZ->GetThumbPosition()-50)/20.0;
- WxST_TranslationZ->SetLabel(str);
- Repaint();
-}
- */
 
 void ShapeRotatorDlg::WxSB_RotateXScroll(wxScrollEvent& event) {
     wxString str;
     str << (WxSB_RotateX->GetThumbPosition());
     WxST_RotateX->SetLabel(str);
-    Repaint();
+    OnScroll();
 }
 
 void ShapeRotatorDlg::WxSB_RotateYScroll(wxScrollEvent& event) {
     wxString str;
     str << (WxSB_RotateY->GetThumbPosition());
     WxST_RotateY->SetLabel(str);
-    Repaint();
+    OnScroll();
 }
 
 void ShapeRotatorDlg::WxSB_RotateZScroll(wxScrollEvent& event) {
     wxString str;
     str << (WxSB_RotateZ->GetThumbPosition());
     WxST_RotateZ->SetLabel(str);
-    Repaint();
+    OnScroll();
 }
 
-/*
-void ShapeRotatorDlg::WxSB_ScaleXScroll(wxScrollEvent& event)
-{
- wxString str;
- str<<(WxSB_ScaleX->GetThumbPosition()+1.0)/100.0;
- WxST_ScaleX->SetLabel(str);
- Repaint();	
-}
-
-
-void ShapeRotatorDlg::WxSB_ScaleYScroll(wxScrollEvent& event)
-{
- wxString str;
- str<<(WxSB_ScaleY->GetThumbPosition()+1.0)/100.0;
- WxST_ScaleY->SetLabel(str);
- Repaint();
-}
-
-
-void ShapeRotatorDlg::WxSB_ScaleZScroll(wxScrollEvent& event)
-{
- wxString str;
- str<<(WxSB_ScaleZ->GetThumbPosition()+1.0)/100.0;
- WxST_ScaleZ->SetLabel(str);
- Repaint();
-}
- */
-
-
-void ShapeRotatorDlg::clear3DData() {
-    x_start.clear();
-    y_start.clear();
-    z_start.clear();
-    x_end.clear();
-    y_end.clear();
-    z_end.clear();
-}
 void ShapeRotatorDlg::clear2DData() {
     wxClientDC dcx(WxPanel1);
     wxBufferedDC dca(&dcx);
@@ -483,7 +235,7 @@ void ShapeRotatorDlg::drawLine(wxMouseEvent& event) {
     wxClientDC dcx(WxPanel1);
     wxBufferedDC dca(&dcx);
 
-    clear3DData();
+    drawer3D.Clear();
     
     if (!cleared) {
         dca.Clear();
@@ -565,26 +317,12 @@ void ShapeRotatorDlg::updateMouseMovePos(wxMouseEvent& event) {
 }
 void ShapeRotatorDlg::WxPanel1UpdateUI(wxUpdateUIEvent& event) {
     
-    Repaint();
+    drawer3D.Repaint();
     redraw2D();
     if(usingDrawMode == Line)
-        drawFloatingLine();
-        
-    
+        drawFloatingLine(); 
 }
 
-/*
- * WxPanel1UpdateUI0
- */
-void ShapeRotatorDlg::WxPanel1UpdateUI0(wxUpdateUIEvent& event) {
-    // insert your code here
-}
-//void ShapeRotatorDlg::Resize(wxSizeEvent& event) {
-//    Repaint();
-//}
-/*
- * WxButton3Click
- */
 void ShapeRotatorDlg::WxButton3Click(wxCommandEvent& event) {
     // insert your code here
 }
@@ -593,12 +331,19 @@ void ShapeRotatorDlg::WxButton2Click(wxCommandEvent& event) {
 }
 void ShapeRotatorDlg::clearAll() {
     clear2DData();
-    clear3DData();
+    drawer3D.Clear();
     drawOn = false;
-    cleared = false;
+    cleared = false; 
     firstPointDrawn = false;
 }
+
+void ShapeRotatorDlg::OnScroll() {
+     rotationVector->Set(WxSB_RotateX->GetThumbPosition(), WxSB_RotateY->GetThumbPosition(), WxSB_RotateZ->GetThumbPosition());
+     drawer3D.UpdateRotation(*rotationVector);
+     drawer3D.Repaint();
+}
 void ShapeRotatorDlg::drawRoteted(wxCommandEvent& event) {
+    if (daneX.size() > 1) {
     int max = daneX.size() - daneX.size() % 2 -1;
     double** result = new double*[max];
 
@@ -615,7 +360,7 @@ void ShapeRotatorDlg::drawRoteted(wxCommandEvent& event) {
     
     GenerateRotation gr(result, max);
     double** rotations = gr.generate();
-    clear3DData();R.clear();G.clear();B.clear();
+    drawer3D.Clear();
     
     for(int i = 0; i < max; i++) {
         delete [] result[i];
@@ -623,21 +368,51 @@ void ShapeRotatorDlg::drawRoteted(wxCommandEvent& event) {
     
     delete [] result;
     
+    Vector4 startVector;
+    Vector4 endVector; 
+    Vector4 colorVector;
     for (int i = 0; i < (gr.get_vec_num()) * 3 * (360/gr.get_angle()) ; i++) {
- 
-        x_start.push_back(rotations[i][0]);
-        y_start.push_back(rotations[i][1]);
-        z_start.push_back(rotations[i][2]);
-        
-        x_end.push_back(rotations[i][3]);
-        y_end.push_back(rotations[i][4]);
-        z_end.push_back(rotations[i][5]);
-        
-        R.push_back(rotations[i][6]);
-        G.push_back(rotations[i][7]);
-        B.push_back(rotations[i][8]);
+        startVector.Set(rotations[i][0], rotations[i][1], rotations[i][2]);
+        endVector.Set(rotations[i][3], rotations[i][4],rotations[i][5]);
+        colorVector.Set(rotations[i][6], rotations[i][7],rotations[i][8]);
+        drawer3D.AddVector(startVector, endVector, colorVector);
+
     }
     
     gr.free_2d_arr(rotations);
-    Repaint();
+    drawer3D.Repaint();
+    }
+}
+
+void ShapeRotatorDlg::OnKeyDown(wxKeyEvent& event) {
+        if (((wxKeyEvent&)event).GetKeyCode() == 76)
+        {
+                usingDrawMode = Line;
+                 std::cout << "line\n";
+        }
+        else if (((wxKeyEvent&)event).GetKeyCode() == 67)
+        {
+            std::cout << "curve\n";     
+            usingDrawMode = Curve;
+        }
+    
+}
+void ShapeRotatorDlg::connectKeyDownEvent(wxWindow* pclComponent) {
+  if(pclComponent)
+  {
+    pclComponent->Connect(wxID_ANY, 
+                          wxEVT_KEY_DOWN, 
+                          wxKeyEventHandler(ShapeRotatorDlg::OnKeyDown),
+                          (wxObject*) NULL,
+                          this);
+
+    wxWindowListNode* pclNode = pclComponent->GetChildren().GetFirst();
+    while(pclNode)
+    {
+      wxWindow* pclChild = pclNode->GetData();
+      this->connectKeyDownEvent(pclChild);
+      
+      pclNode = pclNode->GetNext();
+    }
+  }
 }
