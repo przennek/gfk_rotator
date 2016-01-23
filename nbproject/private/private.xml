@@ -7,14 +7,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/kamil/projekt_grafika/grafika/Drawer3D.cpp</file>
-            <file>file:/home/kamil/projekt_grafika/grafika/ShapeRotatorDlg.h</file>
-            <file>file:/home/kamil/projekt_grafika/grafika/vecmat.cpp</file>
-            <file>file:/home/kamil/projekt_grafika/grafika/ShapeRotatorApp.h</file>
-            <file>file:/home/kamil/projekt_grafika/grafika/vecmat.h</file>
-            <file>file:/home/kamil/projekt_grafika/grafika/ShapeRotatorDlg.cpp</file>
-            <file>file:/home/kamil/projekt_grafika/grafika/Drawer3D.h</file>
-            <file>file:/home/kamil/projekt_grafika/grafika/ShapeRotatorApp.cpp</file>
+            <file>file:/home/przemek/grafika/GenerateRotation.h</file>
+            <file>file:/home/przemek/grafika/ShapeRotatorDlg.h</file>
+            <file>file:/home/przemek/grafika/ShapeRotator.wxform</file>
+            <file>file:/home/przemek/grafika/ShapeRotatorDlg.cpp</file>
+            <file>file:/home/przemek/grafika/ShapeRotatorApp.cpp</file>
+            <file>file:/home/przemek/grafika/ShapeRotatorApp.h</file>
+            <file>file:/home/przemek/grafika/tests/AbstractTest.cpp</file>
         </group>
     </open-files>
 </project-private>
