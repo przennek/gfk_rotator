@@ -16,19 +16,20 @@ using namespace std;
 class AbstractTest {
 public:
     void assertTrue(bool p1) {
-        if(!p1) std::cout << test_name << " failed.\n";
-        std::cout << test_name << " passed.\n";
+        if(!p1) std::cout << get_test_name() << " failed.\n";
+        std::cout << get_test_name() << " passed.\n";
     }
        
     void assertFalse(bool p1) {
-        if(p1) std::cout << test_name << " failed.\n";
-        std::cout << test_name << " passed.\n";
+        if(p1) std::cout << get_test_name() << " failed.\n";
+        std::cout << get_test_name() << " passed.\n";
     }
     
-    void runTest();
+    virtual void runTest();
     
-private:
-    string test_name = "AbstractTest"; 
+    virtual string get_test_name() {
+        return "AbstractTest";
+    };
 };
 
 #endif /* ABSTRACTTEST_H */

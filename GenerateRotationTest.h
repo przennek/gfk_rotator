@@ -17,14 +17,18 @@
 #include "AbstractTest.h"
 
 class GenerateRotationTest: public AbstractTest {
-public:    
+public:  
     void runTest() {
         assertTrue(true);
     }
     
-    static GenerateRotationTest *instance;
+    string get_test_name() {
+        return "GenerateRotationTest";
+    }
+    
+    static AbstractTest *instance; 
 };
 
-GenerateRotationTest* GenerateRotationTest::instance = new GenerateRotationTest();
+AbstractTest* GenerateRotationTest::instance = new GenerateRotationTest();
 #endif /* GENERATEROTATIONTEST_H */
 

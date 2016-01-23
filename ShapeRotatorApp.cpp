@@ -11,7 +11,7 @@
 #include "ShapeRotatorDlg.h"
 #include "GenerateRotationTest.h"
 
-//#define RUN_TESTS
+#define RUN_TESTS
 
 IMPLEMENT_APP(ShapeRotatorDlgApp)
 
