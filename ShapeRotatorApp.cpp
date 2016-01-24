@@ -11,7 +11,7 @@
 #include "ShapeRotatorDlg.h"
 #include "GenerateRotationTest.h"
 
-//#define RUN_TESTS
+#define RUN_TESTS
 
 IMPLEMENT_APP(ShapeRotatorDlgApp)
 
@@ -24,8 +24,8 @@ bool ShapeRotatorDlgApp::OnInit()
 	return true;
 #else
         // tutaj dodawajcie swoje testy do wywoływania
-        GenerateRotationTest::instance->runTest();
-        
+        GenerateRotationTest* test = new GenerateRotationTest();
+        test->runTest();
         std::cout << "Test run finished. Press eny key to continue...\n";
 #endif
 }
