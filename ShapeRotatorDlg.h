@@ -91,6 +91,7 @@ class ShapeRotatorDlg : public wxDialog
                 void drawCurve(wxMouseEvent& event);
                 void OnScroll();
                 void connectKeyDownEvent(wxWindow* pclComponent);
+                void saveToFile(wxCommandEvent& event);
 	
 	private:
 		//Do not add custom control declarations between 
@@ -150,6 +151,7 @@ class ShapeRotatorDlg : public wxDialog
 	private:
 		void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+                wxBitmap * getBitmap();
 };
 
 #endif
