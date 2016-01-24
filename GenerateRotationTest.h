@@ -16,19 +16,16 @@
 
 #include "AbstractTest.h"
 
-class GenerateRotationTest: public AbstractTest {
+class GenerateRotationTest : public AbstractTest {
 public:  
+    GenerateRotationTest() : test_name("GenerateRotationTest") {
+        
+    }
+    
     void runTest() {
         assertTrue(true);
     }
-    
-    string get_test_name() {
-        return "GenerateRotationTest";
-    }
-    
-    static AbstractTest *instance; 
 };
 
-AbstractTest* GenerateRotationTest::instance = new GenerateRotationTest();
 #endif /* GENERATEROTATIONTEST_H */
 
