@@ -29,11 +29,13 @@ BEGIN_EVENT_TABLE(ShapeRotatorDlg, wxDialog)
 ////Manual Code End
 
 EVT_CLOSE(ShapeRotatorDlg::OnClose)
-EVT_BUTTON(ID_WXBUTTON3, ShapeRotatorDlg::WxButton3Click)
+
 
 EVT_BUTTON(ID_WXBUTTON2, ShapeRotatorDlg::WxButton2Click)
 
 EVT_BUTTON(ID_WXBUTTON1, ShapeRotatorDlg::drawRoteted)
+
+EVT_BUTTON(ID_WXBUTTON3, ShapeRotatorDlg::saveToFile)
 
 EVT_COMMAND_SCROLL(ID_WXSB_ROTATEZ, ShapeRotatorDlg::WxSB_RotateZScroll)
 
@@ -141,7 +143,7 @@ void ShapeRotatorDlg::CreateGUIControls() {
     WxButton3 = new wxButton(this, ID_WXBUTTON3, _("Save image"), wxPoint(84, 192), wxSize(75, 25), 0, wxDefaultValidator, _("WxButton3"));
     WxBoxSizer2->Add(WxButton3, 0, wxALIGN_CENTER | wxALL, 5);
 
-    WxSaveFileDialog1 = new wxFileDialog(this, _("Choose a file"), _(""), _(""), _("*.*"), wxFD_SAVE);
+    WxSaveFileDialog1 = new wxFileDialog(this, _("Choose a file"), _(""), _(" "), _("*.png"), wxFD_SAVE);
 
     SetTitle(_("ShapeRotator"));
     SetIcon(wxNullIcon);
@@ -415,4 +417,34 @@ void ShapeRotatorDlg::connectKeyDownEvent(wxWindow* pclComponent) {
       pclNode = pclNode->GetNext();
     }
   }
+}
+
+
+void ShapeRotatorDlg::saveToFile(wxCommandEvent& event){
+   WxSaveFileDialog1->ShowModal();
+    //wxBitmap paper;
+    //wxClientDC dcx(WxPanel1);
+    //paper = dcx.GetAsBitmap();
+   // cout << "chuj" << endl;
+    wxBitmap *paper = getBitmap();
+      
+ 
+
+
+
+
+  paper->SaveFile( WxSaveFileDialog1->GetPath(), wxBITMAP_TYPE_PNG, 
+  (wxPalette*)NULL );
+  
+
+  delete paper;
+}
+wxBitmap * ShapeRotatorDlg::getBitmap(){
+    int x,y;
+    WxPanel2->GetSize(&x,&y);
+    wxBitmap *paper = new wxBitmap(x,y);
+    wxMemoryDC memDC;
+    memDC.SelectObject( *paper );
+    drawer3D.Repaint(&memDC);
+    return paper;
 }
