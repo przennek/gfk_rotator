@@ -15,6 +15,7 @@ using namespace std;
 
 class AbstractTest {
 public:
+    /*
     virtual void assertTrue(bool p1) {
         if(!p1) std::cout << test_name << " failed.\n";
         std::cout << test_name << " passed.\n";
@@ -26,7 +27,7 @@ public:
     }
     
     virtual void runTest();
-    
+    */
 protected:
     string test_name = "AbstractTest";
 };

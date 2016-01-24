@@ -18,12 +18,12 @@
 
 class GenerateRotationTest : public AbstractTest {
 public:  
-    GenerateRotationTest() : test_name("GenerateRotationTest") {
+    GenerateRotationTest() /*: test_name("GenerateRotationTest")*/ {
         
     }
     
     void runTest() {
-        assertTrue(true);
+      //  assertTrue(true);
     }
 };
 

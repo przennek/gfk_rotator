@@ -62,37 +62,10 @@ void Drawer3D::setPerspective(Vector4 *point3D, double d) {
 }
 
 void Drawer3D::Repaint() {
-    int w, h, w2, h2;
-    double d = 8;
     wxClientDC dcOld(WxPanel);
-    wxBufferedDC dc(&dcOld);
-    Matrix4 finalTransformationMatrix;
-    Vector4 startVect, endVect;
-    WxPanel->GetSize(&w, &h);
-    dc.Clear();
-    dc.SetDeviceOrigin(w / 2, h / 2);
-    rotAngleV->Set((M_PI * rotAngleRAW->GetX()) / 180.0, (M_PI * rotAngleRAW->GetY()) / 180.0, (M_PI * rotAngleRAW->GetZ()) / -180.0);
-    finalTransformationMatrix =  getRotationMatrix(rotAngleV);
-
-    int x_start_size = x_start.size();
-
-    for (int i = 0; i < x_start_size; ++i) {
-        startVect.Set(x_start[i], y_start[i], -z_start[i]);
-        endVect.Set(x_end[i], y_end[i], -z_end[i]);
-        startVect = finalTransformationMatrix * startVect;
-        endVect = finalTransformationMatrix * endVect;
-        if (startVect.GetZ() > -d && endVect.GetZ() > -d) {
-            setPerspective(&startVect, d);
-            setPerspective(&endVect, d);
-            dc.SetPen(wxPen(wxColour(R.at(i), G.at(i), B.at(i))));
-            startVect.Set(startVect.GetX() * w / 2, startVect.GetY() * h / 2, startVect.GetZ());
-            endVect.Set(endVect.GetX() * w / 2, endVect.GetY() * h / 2, endVect.GetY());
-            dc.DrawLine(startVect.GetX(), -startVect.GetY(), endVect.GetX(), -endVect.GetY());
-        }
-    }
-   
-
+    Repaint(&dcOld);
 }
+
 void Drawer3D::AddVector(Vector4 &startVect, Vector4 &endVect, Vector4 &colorVect) {
     x_start.push_back(startVect.GetX());
     y_start.push_back(startVect.GetY());
@@ -121,4 +94,37 @@ void Drawer3D::AddVector(Vector4 &startVect, Vector4 &endVect, Vector4 &colorVec
      *rotAngleRAW = rotateVector;
  }
 
+ 
+ void Drawer3D::Repaint(wxDC * dcOld) {
+    int w, h, w2, h2;
+    double d = 8;
+    
+    wxBufferedDC dc(dcOld);
+    Matrix4 finalTransformationMatrix;
+    Vector4 startVect, endVect;
+    WxPanel->GetSize(&w, &h);
+    dc.Clear();
+    dc.SetDeviceOrigin(w / 2, h / 2);
+    rotAngleV->Set((M_PI * rotAngleRAW->GetX()) / 180.0, (M_PI * rotAngleRAW->GetY()) / 180.0, (M_PI * rotAngleRAW->GetZ()) / -180.0);
+    finalTransformationMatrix =  getRotationMatrix(rotAngleV);
+
+    int x_start_size = x_start.size();
+
+    for (int i = 0; i < x_start_size; ++i) {
+        startVect.Set(x_start[i], y_start[i], -z_start[i]);
+        endVect.Set(x_end[i], y_end[i], -z_end[i]);
+        startVect = finalTransformationMatrix * startVect;
+        endVect = finalTransformationMatrix * endVect;
+        if (startVect.GetZ() > -d && endVect.GetZ() > -d) {
+            setPerspective(&startVect, d);
+            setPerspective(&endVect, d);
+            dc.SetPen(wxPen(wxColour(R.at(i), G.at(i), B.at(i))));
+            startVect.Set(startVect.GetX() * w / 2, startVect.GetY() * h / 2, startVect.GetZ());
+            endVect.Set(endVect.GetX() * w / 2, endVect.GetY() * h / 2, endVect.GetY());
+            dc.DrawLine(startVect.GetX(), -startVect.GetY(), endVect.GetX(), -endVect.GetY());
+        }
+    }
+   
+
+}
 

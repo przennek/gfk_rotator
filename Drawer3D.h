@@ -31,6 +31,11 @@ public:
     virtual ~Drawer3D();
     /**
     * Method which redraw all vectors
+    * @param wxClientDC dcOld  wxClientDC which is using to draw
+    */
+    void Repaint(wxDC * dcOld) ;
+    /**
+    * Method which redraw all vectors
     */
     void Repaint();
     /**
